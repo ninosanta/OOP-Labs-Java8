@@ -1,6 +1,7 @@
 # OOP universitary labs on Java 8
 
-This repository contains my **personal** Java programs wrote trying to solve OOP labs requirements. A lot was written in english language but there is also something in Italian.
+This repository contains my **personal** Java programs wrote trying to solve OOP labs requirements. Each folder is an Eclipse (IDE) project.
+A lot was written in English language but there is also something in Italian.
 Teacher's solutions and clean tracks are available too. Furthemore, solutions contain JUnit tests.
 
 Each lab has its own requirements inside its folder. Requirements HTML files are available in two versions "Requirements.html" and "Requisiti.html", the latter one contains requirements list in Italian language. 
