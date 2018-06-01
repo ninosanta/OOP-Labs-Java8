@@ -132,7 +132,7 @@ public class Clinic {
 	 * 
 	 * @return the collection of doctors with no patient sorted in alphabetic order (last name and then first name)
 	 */
-	public Collection<Integer> idleDoctors() {
+	public Collection<Integer> idleDoctors() {  // Collection<Integer docID>
 		// TODO Complete method
 		return null;
 	}
@@ -142,7 +142,7 @@ public class Clinic {
 	 * 
 	 * @return  the collection of doctors
 	 */
-	public Collection<Integer> busyDoctors() {
+         public Collection<Integer> busyDoctors() {  // Collection<Integer docID>
 		// TODO Complete method
 		return null;
 	}
