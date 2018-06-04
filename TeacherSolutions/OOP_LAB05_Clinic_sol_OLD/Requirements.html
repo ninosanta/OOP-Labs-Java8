@@ -1,0 +1,121 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>Lab - Doctors</title>
+  <meta name="revision" content="May 24, 2017">
+  <meta name="author" content="Marco Torchiano">
+  <link href=".css.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+
+<h1>Medical Clinic</h1>
+Implement a system to manage patients of a medical clinic.
+The classes are hosted in package <i>clinic</i>.<br>
+The system must meet the following requirements.</p>
+
+
+<h2>R1: Patients</h2>
+
+<p>The main class of the program is class <b>Clinic</b>.</p>
+<p>
+Patients are characterized by the first name, the last name, and the
+unique social security number (SSN). 
+ New patients can be added to the system by means of method <b>addPatient()</b>.</p>
+<p>
+The information about a patient can be retrieved by means of method
+<b>getPatient()</b> that given an SSN returns an object of class <b>Person</b>.
+Such class provides the getter methods for SSN, first and last names.
+If the patient does not exist, exception <b>NoSuchPatient</b> is
+thrown.</p>
+
+
+<h2>R2: Doctors</h2>
+
+<p>Doctors are characterized by the first name, last name, SSN, unique badge ID, 
+and the specialization (e.g. "cardiologist", "dentist", etc.).
+New doctors can be added to the system by means of method <b>addDoctor()</b>.</p>
+<p>
+Method <b>getDoctor()</b>, given a badge ID, returns an object of class <b>Doctor</b>.
+Such class that extends class Person and provide the getter methods for the id 
+and specialization.
+<p>
+If the doctor does not exist, exception <b>NoSuchDoctor</b> is thrown.</p>
+<p> 
+Keep in mind that doctors can be patients of the same clinic they work in.</p>
+
+<h2>R3: Patient registration</h2>
+
+<p>When accepted, a patient is assigned to one of the clinic doctors. To
+this aim, method <b>assignPatientToDoctor()</>
+is provided. Patient is identified by means of her SSN, and doctor is
+identified by means of her badge ID. If the doctor does not exist,
+exception <b>NoSuchDoctor</b> is
+thrown. Further, if the patient does not exist, exception <b>NoSuchPatient</b> is thrown.</p>
+<p>
+By means of method <b>getDoctor()</b> of class <i>Person</i>,
+it is possible to obtain the Doctor assigned to that person.</p>
+<p>
+By means of method <b>getPatients()</b> of class <i>Doctor</i>
+returns the list of all patients of that doctor.</p>
+
+
+<h2>R4: Loading</h2>
+
+<p>The method <b>loadData()</b> of class <i>Clinic</i> accepts a file path as a
+parameter and loads from it the information about patients and doctors.<br>
+The file is a text file organized by rows; each row contains info about
+either a patient or a doctor.</p>
+<p>
+Rows containing a person's info begin with letter "P" followed by first name,
+last name, and SSN. Rows containing doctor's info start with letter "M",
+followed by badge ID, first name, last name, SSN, and specialization.<br>
+The elements on a line are separated by the <i>";"</i> character.</p>
+<p>
+In case of error in the data present on a line, the method should be able
+to ignore the row and skip to the next one.<br>
+In case of IO errors the method propagates an IOException.</p>
+
+
+
+<h2>R5: Statistics</h2>
+
+<p>
+The method <b>idleDoctors()</b> returns the collection of
+doctors that have no patient at all, sorted in alphabetic order.</p>
+<p>
+The method <b>busyDoctors()</b> returns the collection of
+doctors that are assigned a number of patients larger than the average.</p>
+<p>
+The method <b>doctorsByNumPatients()</b> returns list of strings
+containing the name of the doctor and the relative number of patients
+with the relative number of patients, sorted by decreasing number.<br>
+The string must be formatted as "<i>### : ID SURNAME NAME</i>" where <i>###</i>
+represent the number of patients (printed on three characters).</p>
+<p>
+The method <b>countPatientsPerSpecialization()</b> computes the number of
+patients per (their doctor's) specialization.
+The elements are sorted first by decreasing count and then by alphabetic specialization.<br>
+The strings are structured as "<i>### - SPECIALITY</i>" where <i>###</i>
+represent the number of patients (printed on three characters).</p>
+
+<h3>Hint:</h3>
+<ul class="hint">
+<li> Formatting can be performed using the <i>String.format()</i> method.<br>
+	E.g. <i>String.format("%3d", i)</i> prints integer variable <i>i</i>
+	on three characters.
+</ul>
+<p>
+
+
+<!--
+<h2>R6: Saving</h2>
+The method <b>saveData()</b> accepts a file path as a parameter and
+saves the information of doctors and patients on that file, according
+to the format specified in the previous requirement.
+<p>
+ In case of IO errors the method propagates an IOException.
+<p>
+-->
+
+</body>
+</html>
