@@ -1,5 +1,6 @@
 package schools;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -14,6 +15,7 @@ public class Municipality {
 	private String name;
 	private String province;
 	private Community community;
+	private Collection<Branch> branches = new ArrayList<>();
 	
 	
 	public Municipality(String name, String province, Community community) {
@@ -51,13 +53,19 @@ public class Municipality {
 		return Optional.ofNullable(community);
 	}	
 	
+	
+	public void addBranch(Branch branch) {
+		branches.add(branch);
+	}
+	
+	
 	/**
 	 * Retrieves all the school branches located in the municipality 
 	 * 
 	 * @return collection of branches
 	 */
 	public Collection<Branch> getBranches() {
-		return null;
+		return branches;
 	}
 
 }

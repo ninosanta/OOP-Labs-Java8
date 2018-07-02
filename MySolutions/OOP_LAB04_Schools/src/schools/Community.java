@@ -1,5 +1,6 @@
 package schools;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -30,10 +31,12 @@ public class Community {
 	
 	private String name;
 	private Type community;
+	private Collection<Municipality> municipalities = new ArrayList<>();
 	
-	public Community(String foo, Type bar) {
-		name = foo;
-		community = bar;
+	
+	public Community(String name, Type type) {
+		this.name = name;
+		this.community = type;
 	}
 	
 	/**
@@ -60,6 +63,18 @@ public class Community {
 	 * @return collection of municipalities
 	 */
 	public Collection<Municipality> getMunicipalities() {
-		return null;
+		return municipalities;
 	}
+	
+	
+	public void addMunicipality(Municipality m) {
+		municipalities.add(m);
+	}
+	
+	
+	@Override
+	public String toString() {
+		return "Community [name=" + name + "]";
+	}
+	
 }

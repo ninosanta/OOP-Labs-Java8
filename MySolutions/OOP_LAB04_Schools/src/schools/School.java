@@ -69,5 +69,12 @@ public class School {
 	public Collection<Branch> getBranches() {
 		return branches;
 	}
+	
+	
+	@Override
+	public String toString() {
+		return "School [name=" + name + ", code=" + code + ", grade=" + grade + ", description=" + description + "]";
+	}
+
 
 }
