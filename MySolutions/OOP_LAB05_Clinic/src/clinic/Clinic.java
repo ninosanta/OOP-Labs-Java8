@@ -18,8 +18,10 @@ import static java.util.Comparator.*;
 
 
 /**
+ * Main class.
  * Represents a clinic with patients and doctors.
  * 
+ * @author ninosanta
  */
 public class Clinic {
 	
@@ -35,6 +37,10 @@ public class Clinic {
 	private static final int DOC_FIELDS = 6;
 	Map<String, Patient> patients = new HashMap<>();
 	Map<Integer, Doctor> doctors = new HashMap<>();
+	
+	
+	public Clinic() { }
+	
 	
 	/**
 	 * Add a new clinic patient.
@@ -56,8 +62,7 @@ public class Clinic {
 	 * @throws NoSuchPatient in case of no patient with matching SSN
 	 */
 	public String getPatient(String ssn) throws NoSuchPatient {
-//		String patient = patients.get(ssn).toString();
-//		if (patient == null) {
+//		if (!patients.containsKey(ssn)) {
 //			String msg = "Patient " + ssn + "  is not present!";
 //			throw new NoSuchPatient(msg);
 //		}
@@ -83,9 +88,9 @@ public class Clinic {
 	 * @param specialization doctor's specialization
 	 */
 	public void addDoctor(String first, String last, String ssn, int docID, String specialization) {
+		addPatient(first, last, ssn);
 		Doctor doctor = new Doctor(first, last, ssn, docID, specialization);
 		doctors.put(docID, doctor);
-		patients.put(ssn, new Patient(first, last, ssn));
 	}
 
 	/**
@@ -96,12 +101,17 @@ public class Clinic {
 	 * @throws NoSuchDoctor in case no doctor exists with a matching ID
 	 */
 	public String getDoctor(int docID) throws NoSuchDoctor {
-		try {
-			return doctors.get(docID).toString();
-		} catch (NullPointerException nd) {
-			String msg = "\n\nDoctor "+docID+" not found!\n\n";
-			throw new NoSuchDoctor(msg);
-		}
+//		try {
+//			return doctors.get(docID).toString();
+//		} catch (NullPointerException nd) {
+//			String msg = "\n\nDoctor "+docID+" not found!\n\n";
+//			throw new NoSuchDoctor(msg);
+//		}
+		
+		if (!doctors.containsKey(docID))
+			throw new NoSuchDoctor();
+
+		return doctors.get(docID).toString();		
 	}
 	
 	/**
@@ -113,24 +123,27 @@ public class Clinic {
 	 * @throws NoSuchDoctor in case no doctor exists with a matching ID
 	 */
 	public void assignPatientToDoctor(String ssn, int docID) throws NoSuchPatient, NoSuchDoctor {
-//		if (patients.containsKey(ssn)) {
-//			throw new NoSuchPatient();
+//		try {
+//			Doctor doc = doctors.get(docID);
+//			try {
+//				Patient patient = patients.get(ssn);
+//				doc.addPatient(patient);
+//				patient.setDoctor(doc);
+//			} catch (NullPointerException np) {
+//				throw new NoSuchPatient();
+//			}
+//		} catch (NullPointerException nd) {
+//			throw new NoSuchDoctor();
 //		}
-//		etc...
-		 
 		// OPPURE:
-		try {
-			Doctor doc = doctors.get(docID);
-			try {
-				Patient patient = patients.get(ssn);
-				doc.addPatient(patient);
-				patient.setDoctor(doc);
-			} catch (NullPointerException np) {
-				throw new NoSuchPatient();
-			}
-		} catch (NullPointerException nd) {
+		if (!doctors.containsKey(docID))
 			throw new NoSuchDoctor();
-		}
+		if (!patients.containsKey(ssn))
+			throw new NoSuchPatient();
+		
+		
+		patients.get(ssn).setDoctor(doctors.get(docID));
+		doctors.get(docID).addPatient(patients.get(ssn));
 	}
 	
 	/**
@@ -142,16 +155,23 @@ public class Clinic {
 	 * @throws NoSuchDoctor in case no doctor has been assigned to the patient
 	 */
 	public int getAssignedDoctor(String ssn) throws NoSuchPatient, NoSuchDoctor {
-		try {
-			Patient patient = patients.get(ssn);
-			Doctor doc = patient.getDoctor();
-			if (doc == null) {
-				throw new NoSuchDoctor("Patient "+patient+" has no doctor assigned!");
-			}
-			return doc.getID();
-		} catch (NullPointerException np) {
-			throw new NoSuchPatient("Patient "+ssn+" doesn't exist");
-		}
+//		try {
+//			Patient patient = patients.get(ssn);
+//			Doctor doc = patient.getDoctor();
+//			if (doc == null) {
+//				throw new NoSuchDoctor("Patient "+patient+" has no doctor assigned!");
+//			}
+//			return doc.getID();
+//		} catch (NullPointerException np) {
+//			throw new NoSuchPatient("Patient "+ssn+" doesn't exist");
+//		}
+		
+		if (!patients.containsKey(ssn))
+			throw new NoSuchPatient();
+		if (patients.get(ssn).getDoctor() == null)
+			throw new NoSuchDoctor();
+		
+		return patients.get(ssn).getDoctor().getID();		
 	}
 	
 	/**
@@ -203,47 +223,60 @@ public class Clinic {
 		
 		lines.stream()
 			 .forEach( line -> {
-				 	line = line.trim().replace("; ", ";");
+//				 	line = line.trim().replace("; ", ";");
 //				 	System.out.println(line);
 //					String s = "  ciao    PIPPO     ";
 //				 	s.trim()  // " ciao pippo ";
+				 	line = line.replaceAll(" ", "");  // elimina tutti, ma tutti, gli spazi
 				 	String[] fields = line.split(";");
-				 	if (fields.length == DOC_FIELDS || fields.length == PAT_FIELDS) {
-				 		try {
-						 	switch (line.charAt(0)) {
-							case 'M':
-								if (checkID(fields[D_ID]) == false) {
-									try {
-										throw new IOException("\nID field: " + fields[1] + " must be an integer!\n");
-									} catch (IOException e) {
-										// TODO Auto-generated catch block
-										System.err.println(e.getMessage());
-									}
-									break;
-								}
-								Doctor doc = new Doctor(fields[D_NAME], fields[D_LAST], fields[D_SSN], 
-														Integer.parseInt(fields[D_ID]), fields[D_SPEC]);
-								doctors.put(doc.getID(), doc);
-								break;
-							case 'P':
-								Patient patient = new Patient(fields[P_NAME], fields[P_LAST], fields[P_SSN]);
-								patients.put(patient.getSSN(), patient);
-								break;
-							default:
-								System.err.println("\nLine: " + line
-										            + "doesn't start with M or P\n");
-								break;
-							}
-				 		} catch(ArrayIndexOutOfBoundsException e){
-							System.err.println("Tried to access to an inexistent field of the line!");
-				 		}
-				 	} else {
-				 		System.err.println("Line:\n\t" + line 
-				 						+ "\nhas a wrogn number of elements\n");
-				 	}
-			 	}
-			 );
+//				 	if (fields.length == DOC_FIELDS || fields.length == PAT_FIELDS) {
+//				 		try {
+//						 	switch (line.charAt(0)) {
+//							case 'M':
+//								if (checkID(fields[D_ID]) == false) {
+//									try {
+//										throw new IOException("\nID field: " + fields[1] + " must be an integer!\n");
+//									} catch (IOException e) {
+//										// TODO Auto-generated catch block
+//										System.err.println(e.getMessage());
+//									}
+//									break;
+//								}
+//								Doctor doc = new Doctor(fields[D_NAME], fields[D_LAST], fields[D_SSN], 
+//														Integer.parseInt(fields[D_ID]), fields[D_SPEC]);
+//								doctors.put(doc.getID(), doc);
+//								break;
+//							case 'P':
+//								Patient patient = new Patient(fields[P_NAME], fields[P_LAST], fields[P_SSN]);
+//								patients.put(patient.getSSN(), patient);
+//								break;
+//							default:
+//								System.err.println("\nLine: " + line
+//										            + "doesn't start with M or P\n");
+//								break;
+//							}
+//				 		} catch(ArrayIndexOutOfBoundsException e){
+//							System.err.println("Tried to access to an inexistent field of the line!");
+//				 		}
+//				 	} else {
+//				 		System.err.println("Line:\n\t" + line 
+//				 						+ "\nhas a wrogn number of elements\n");
+//				 	}
+//			 	}
+				 	if (fields[0].equals("P") && fields.length == 4) {
+						// first, last, ssn
+						addPatient(fields[1], fields[2], fields[3]);
+						
+					} else if (fields[0].equals("M") && fields.length == 6) {
+						// ID, first, last, ssn, specializzazione
+						if (fields[1].matches("^[0-9]*$"))
+								addDoctor(fields[2], fields[3], fields[4], 
+										  Integer.parseInt(fields[1]), fields[5]);
+					}
+			 });
 	
+				 	
+			
 		// oppure lettura char by char
 //		StringBuffer line = new StringBuffer();
 //		int ch;
@@ -312,7 +345,19 @@ public class Clinic {
 	 * 
 	 * @return the collection of strings with information about doctors and patients count
 	 */
-	public Collection<String> doctorsByNumPatients(){
+	public Collection<String> doctorsByNumPatients() {
+//		return doctors.values().stream()
+//		.filter(doc -> doc.getPatients().size() > 0)
+//		.collect(groupingBy(doc -> doc.getDocID()+" "+doc.getLast()+" "+doc.getFirst(), 
+//							//mapping(doct -> doct.getPatients().size(), 
+//							//		summingInt(np -> np)),
+//							//)
+//							summingInt(doct -> doct.getPatients().size()))
+//				)
+//		.entrySet().stream()
+//		.sorted(comparing(Map.Entry::getValue, reverseOrder()))
+//		.map(e -> String.format("%3d", e.getValue())+ " : " + e.getKey())
+//		.collect(toList());
 		
 		return doctors.values().stream() // Stream<Doctor>
 					  .filter(d -> ! d.getPatients().isEmpty())
@@ -337,13 +382,14 @@ public class Clinic {
 		return patients.values().stream()
 					   .filter(p -> p.getDoctor() != null)
 					   .collect(groupingBy(p -> p.getDoctor().getSpecialization(),
-							  			   () -> new TreeMap<String, Long>(),
-							  			   counting()						
-							  	     	  )
-							  )  // TreeMap<Specializzazione, NumeroPazientiPerSpecializzazione>
+//							  			   () -> new TreeMap<String, Long>(),
+							  			   counting())
+							   ) // (Tree)Map<Specializzazione, NumeroPazientiPerSpecializzazione>
 				.entrySet().stream()
-						   .sorted(comparing(Map.Entry::getValue, reverseOrder()))
-						   .sorted(comparing(Map.Entry::getKey))
+//						   .sorted(comparing(Map.Entry::getValue, reverseOrder()))
+//						   .sorted(comparing(Map.Entry::getKey))
+				.sorted(comparing(Map.Entry<String, Long>::getValue, reverseOrder())
+						.thenComparing(Map.Entry::getValue))
 						   .map(e -> String.format("%3d", e.getValue()) + " - " 
 								   		+ e.getKey())
 						   .collect(toList());
