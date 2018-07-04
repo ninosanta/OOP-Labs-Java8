@@ -114,7 +114,7 @@ public class Region {
 	 */
 	public Municipality newMunicipality(String name, String province, Community community){
 		if (community == null)
-			newMunicipality(name, province);
+			return newMunicipality(name, province);
 		Municipality m = new Municipality(name, province, community);
 		municipalities.put(name, m);
 		community.addMunicipality(m);
@@ -247,9 +247,9 @@ public class Region {
 			}
 			
 			if (!municipalities.containsKey(municipality))
-//				newMunicipality(municipality, province, community);  // desn't work : why?
-				municipalities.put(municipality, 
-						   		   new Municipality(municipality, province, community));
+				newMunicipality(municipality, province, community);
+//			municipalities.put(municipality, 
+//					   		   new Municipality(municipality, province, community));
 			
 			School school;
 			if(schools.containsKey(code))
@@ -297,8 +297,7 @@ public class Region {
 										  .stream()
 										  .collect(groupingBy(School::getDescription, 
 												   collectingAndThen(counting(), 
-														             total -> total.intValue()
-														             )
+														             total -> total.intValue())
 												   ));
 		// If I had put groupingBy(School::getDescription, counting()) 
         // It would be fine already		             
